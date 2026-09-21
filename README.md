@@ -1,2 +1,2 @@
 # Cloud_Devops_Journey
-Da- to-Day logs of learning journey.
+Day-to-Day logs of learning journey.
