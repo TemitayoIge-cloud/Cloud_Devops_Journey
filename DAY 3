@@ -1,0 +1,47 @@
+Learning Objective
+# Day 3 (Week 1) — Operating Systems: Concepts and Roles
+
+## Learning Objective
+Explain what an operating system does: process scheduling, memory management, and hardware abstraction.
+
+---
+
+### 1. Process Scheduling
+
+The operating system manages access to the CPU across every running process. Since a CPU has a finite number of cores but systems typically run far more processes than that, the OS uses a **scheduler** to decide, at any given moment, which process runs on which core.
+
+- **Context switching**: the OS rapidly saves the state of one process and loads another, cycling through processes fast enough that execution appears simultaneous even on limited hardware.
+- **Scheduling algorithms**: different strategies (e.g., round-robin, priority-based, multilevel queues) determine the order and duration each process gets CPU time.
+- **Prioritization**: some processes (like handling user input) are treated as more time-sensitive than others (like background tasks), so the scheduler adjusts based on urgency and process type.
+- **Process states**: processes move through states — running, waiting, ready — as the OS manages who gets the CPU and who has to wait.
+
+### 2. Memory Management
+
+The OS controls how memory is allocated to processes and ensures they don't interfere with each other.
+
+- **Virtual memory**: each process is given its own isolated address space, so it operates as if it has access to a large, contiguous block of memory — regardless of how fragmented or limited the actual physical RAM is.
+- **Address mapping**: the OS translates these virtual addresses into actual physical RAM locations, using structures like page tables.
+- **Isolation**: because each process's memory space is separate, a bug or crash in one process can't directly corrupt another process's data.
+- **Swapping/paging**: when physical RAM is full, the OS can move inactive portions of memory to disk temporarily, freeing up RAM for active processes, and bringing swapped-out data back when needed.
+- **Allocation and deallocation**: the OS tracks which memory is in use and which is free, allocating space to new processes and reclaiming it when processes terminate.
+
+### 3. Hardware Abstraction
+
+The OS sits between software and physical hardware, providing a standardized way for programs to interact with hardware without needing to understand its specific implementation.
+
+- **Drivers**: specialized software components that translate general OS-level requests into hardware-specific instructions for devices like storage drives, network cards, and GPUs.
+- **System calls**: the interface through which applications request services from the OS (like reading a file or sending network data), without needing direct hardware access.
+- **Device independence**: because the OS handles the hardware-specific details, the same software can run across different hardware configurations without modification.
+- **Resource arbitration**: when multiple processes need the same hardware resource, the OS manages and coordinates access so conflicts don't occur.
+
+---
+
+## Evening Session: OS Comparison Note (Windows vs macOS vs Linux, for servers)
+
+**Windows Server** — Familiar GUI, strong Active Directory/enterprise integration, but heavier resource footprint and licensing costs. Common in corporate environments running .NET or SQL Server workloads.
+
+**macOS** — Rarely used as a server OS in production; Apple doesn't really support it for that role anymore. Mostly relevant for local dev/testing, not cloud infrastructure.
+
+**Linux** — Dominant choice for cloud/DevOps: free, lightweight, highly configurable, huge ecosystem (Docker, Kubernetes, most cloud CLI tools assume Linux). Almost every AWS EC2 instance, container, and CI/CD pipeline runs on it.
+
+**Takeaway for a server:** Linux wins on cost, performance, and ecosystem fit for cloud/DevOps work; Windows Server has its place in enterprise shops; macOS isn't really a server contender.
