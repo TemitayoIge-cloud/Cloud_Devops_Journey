@@ -1,0 +1,48 @@
+# Day 4 (Week 1) — Processes, Threads and Memory Management
+
+## Learning Objective
+Understand how an OS runs multiple programs concurrently and isolates their memory.
+
+## Afternoon Session: Running Processes
+
+Screenshot of Task Manager sorted by memory usage:
+
+![Task Manager screenshot](./screenshots/day4-task-manager.png)
+
+|  # | Process Name | Memory Use | What I Think It Does |
+|---|---|---|---|
+| 1 | Google Chrome (11) | 823.2 MB | Main Chrome browser process — 11 tabs/extensions grouped under it |
+| 2 | Google Chrome | 253.8 MB | A separate Chrome instance/renderer process (tabs run in isolated sub-processes) |
+| 3 | rsEngineSvc | 118.3 MB | Background service, likely tied to a security or system utility (Reason Core/RAV-related engine) |
+| 4 | Avast Service | 74.5 MB | Core background service for Avast Antivirus |
+| 5 | Microsoft Edge (5) | 63.8 MB | Edge browser running with 5 tabs/processes grouped under it |
+| 6 | Microsoft Word (3) | 61.4 MB | Word running with 3 open documents/windows |
+| 7 | Avast Software Analyzer | 51.2 MB | Avast's file/behavior analysis component |
+| 8 | Windows Explorer | 48.7 MB | Manages the desktop, taskbar, and file browsing windows |
+| 9 | Service Host: Diagnostic Policy... | 34.7 MB | Windows background service that detects and helps troubleshoot system problems |
+| 10 | Task Manager | 33.2 MB | The Task Manager application itself, currently open and monitoring the system |
+
+## Evening Session: Process vs. Thread
+
+**Explanation:**
+
+A process is a running instance of a program that has its own private, isolated memory space — the operating system does not 
+allow one process to directly read or write another process's memory. A thread, on the other hand, is a smaller unit of execution 
+that exists inside a process. A single process can have multiple threads, and all of those threads share the same memory space as 
+their parent process, meaning they can access the same data directly. The key difference is isolation: processes are walled off from 
+each other, while threads within the same process are not — they share resources and can communicate with each other much more easily 
+and efficiently than two separate processes can.
+
+Looking at my own Task Manager screenshot, this is visible directly: "Google Chrome (11)" is a single process grouping together 11 
+tabs/extensions that likely run as separate lightweight processes or threads, each isolated enough that one crashing tab doesn't 
+take down the whole browser — while still sharing overall memory allocated to Chrome as a whole.
+
+**Real-world analogy:**
+
+A process is like a sealed office with its own filing cabinet, desk, and equipment — nothing inside that office is visible or accessible 
+to people in other offices. A thread is like an employee working inside that office. One office can have several employees (threads) 
+working at once, and they all share the same filing cabinet and desk (memory) — one employee can hand a document directly to another 
+without leaving the room. But if an employee from a different office wants that same document, they'd have to go through a formal process 
+(like inter-process communication) rather than just reaching over and grabbing it.
+
+---
