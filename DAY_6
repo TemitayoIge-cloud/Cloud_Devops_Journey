@@ -1,0 +1,52 @@
+# Networking & Cloud Basics
+
+## 1. How Computers Communicate
+
+- **IP address** — unique numeric address for each device (like a street address)
+- **MAC address** — hardware ID for a device on a local network
+- **DNS** — translates domain names (`google.com`) into IP addresses
+- **TCP/IP** — breaks data into packets, sends them, reassembles them correctly at the destination
+- **Protocols** — agreed "languages" for specific tasks: **HTTP/HTTPS** (web), **SSH** (remote access), **FTP** (file transfer)
+- **Routers** — pass packets along, hop by hop, until they reach their destination
+
+**Analogy:** IP = address, DNS = phone book, TCP = mail carrier who splits a letter into numbered pages and reassembles them correctly 
+even if some arrive late or need resending.
+
+---
+
+## 2. Mental Model: The Postal System
+
+Every piece of data sent online goes through the same layered process as a letter through the mail:
+
+1. **You write the letter (Application layer)** — the actual content and its "language": HTTP for web pages, SMTP for email, SSH for 
+remote logins.
+2. **You address the envelope (IP)** — every device has an IP address, the equivalent of a street address.
+3. **You look up the address in a phone book (DNS)** — you type `google.com`, and DNS looks up the numeric IP address for you.
+4. **The letter is split into numbered pages (TCP)** — large messages break into packets, numbered so they can be reassembled in order, 
+with lost pages automatically resent.
+5. **The mail truck delivers hop-by-hop (Routers)** — the letter passes through a chain of intermediate stops, each forwarding it closer 
+to its destination.
+6. **It arrives and gets reassembled** — numbered pieces are collected back into the original message and handed to the right application.
+
+**One-sentence version:**
+> Data is written in a specific language (protocol), addressed to a specific location (IP, found via DNS), broken into numbered pieces 
+that travel independently and get reassembled (TCP), passed along hop-by-hop by routers until it arrives.
+
+---
+
+## 3. What a Server Is & What a Cloud Provider Rents You
+
+A **server** is just a computer whose job is to stay running and respond to requests from other computers (clients) — the same kind of 
+hardware as any PC, just dedicated to listening and answering rather than being used directly by one person.
+
+A **cloud provider** (AWS, Azure, GCP) owns thousands of these physical servers in data centers, and what it actually rents you is a 
+virtual *slice* of that hardware — created through virtualization software that splits one physical machine into many independent virtual 
+ones — giving you compute (CPU/RAM), storage, and networking on demand, billed by usage instead of requiring you to buy, rack, and 
+maintain the physical machine yourself.
+
+| You rent... | What it actually is |
+|---|---|
+| **Compute** | A slice of CPU + RAM on a physical server — your own virtual machine (e.g. AWS EC2 instance) |
+| **Storage** | Disk space on their storage systems (e.g. AWS S3, EBS) |
+| **Networking** | Bandwidth, IP addresses, load balancers, routing between your resources and the internet |
+| **Managed services** | Pre-configured software you don't have to install/patch yourself (e.g. managed databases, Kubernetes clusters) |
