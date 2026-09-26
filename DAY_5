@@ -1,0 +1,69 @@
+# Linux Filesystems: Disk Organization, Filesystem Types & Hierarchy
+
+## 1. How Data Is Organized on Disk
+
+**Disk → Filesystem → Inodes → Directories → Mount Points**
+
+- **Disk**: raw array of fixed-size blocks (512B/4KB). No concept of "files" at this level.
+- **Filesystem**: software layer (ext4, NTFS, etc.) that imposes structure on raw blocks.
+- **Inode**: metadata structure for a file — type, permissions, owner, size, timestamps, and pointers to data blocks. Every file has exactly one inode, identified by an inode number. **The inode does not store the filename.**
+  - Check with: `ls -i file`, `stat file`
+- **Directory**: a special file whose content is a table mapping `{filename → inode number}`.
+  - Looking up `/home/temitayo/notes.txt` means walking directory tables step by step until you reach the inode for `notes.txt`.
+  - **Hard links**: multiple filenames pointing to the same inode. Deleting one name just removes that directory entry.
+  - **Renaming**: instant regardless of file size — just edits a name-to-inode mapping.
+  - **Symlinks**: separate inode whose content is a path string pointing elsewhere.
+- **Mount point**: where a separate filesystem (different disk, partition, or network share) gets attached into the directory tree 
+    (e.g. `mount /dev/sdb1 /mnt/backup`).
+  - Inode numbers are only unique **within one filesystem** — you can't hard-link across a mount point boundary.
+  - Inspect with: `df -h`, `mount`, `/proc/mounts`
+
+Disk blocks (raw storage)
+   └── Filesystem — organizes blocks into:
+         ├── Inode table (metadata + data pointers = "files")
+         └── Directories (name → inode mappings)
+Mount points — attach separate filesystems into one unified tree
+```
+
+Useful commands to explore: `stat`, `ls -i`, `df -h`, `mount`, `find / -xdev`
+
+---
+
+## 2. FAT32 vs NTFS vs ext4
+
+| Feature | FAT32 | NTFS | ext4 |
+|---|---|---|---|
+| Max file size | 4 GB | 16 TB | 16 TB |
+| Journaling | No | Yes | Yes |
+| Permissions | None | ACLs | Unix perms |
+| Inode-like structure | None (FAT table) | MFT | True inodes |
+| Best for | USB/SD cards | Windows drives | Linux drives |
+
+**Key conceptual point:** FAT32 has no inodes — it tracks clusters via the File Allocation Table, with filenames living in flat directory entries. NTFS uses an MFT record per file (closer to an inode). ext4 has genuine Unix-style inodes, separate from the directory entries naming them — which is why ext4 natively supports hard links and Unix permissions, while FAT32 can't do either.
+
+---
+
+## 3. Linux Filesystem Hierarchy
+
+| Path | Contains |
+|---|---|
+| `/` | Root of everything — single tree, no drive letters |
+| `/bin`, `/sbin` | Essential command binaries (user / admin) |
+| `/boot` | Kernel, bootloader files |
+| `/dev` | Device files (disks, terminals) |
+| `/etc` | System-wide config files (text, no binaries) |
+| `/home` | Personal user directories (e.g. `/home/temitayo`) |
+| `/lib` | Shared libraries for `/bin`, `/sbin` |
+| `/media`, `/mnt` | Mount points — removable media / manual mounts |
+| `/opt` | Optional third-party software |
+| `/proc` | Virtual — live kernel & process info |
+| `/root` | Home directory for the root user |
+| `/tmp` | Temporary files, cleared on reboot |
+| `/usr` | Installed software (bins, libs, shared data) |
+| `/var` | Variable data — logs (`/var/log`), app state (`/var/lib`), caches |
+
+**Rule of thumb:**
+- Config → `/etc`
+- Logs / debugging → `/var/log`
+- Your files → `/home/<you>`
+- Installed programs → `/usr`
