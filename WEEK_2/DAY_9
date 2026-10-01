@@ -1,0 +1,8 @@
+# File Hierarchy and Navigation
+
+learnt about different commands like:
+pwd: to print the current working directory that you are in
+ls: to list the content of the folder/file you are in
+mkdir: to create an empty folder
+touch: to create files in a folder
+cd: to change from on directory to the another
