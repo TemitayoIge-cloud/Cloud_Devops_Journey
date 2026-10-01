@@ -1,0 +1,102 @@
+## FILE OPERATIONS AND PERMISSIONS
+
+**Learning Objective:** Master file manipulation and the Linux permission model (read/write/execute, `chmod`, `chown`).
+
+---
+
+## File Operation Commands
+
+| Command | What it does | Example |
+|---|---|---|
+| `cp` | Copy a file or directory | `cp app.js backup.js` |
+| `mv` | Move or rename a file | `mv old.txt new.txt` |
+| `rm` | Remove (delete) a file | `rm file.txt`, `rm -r folder/` |
+| `cat` | Print a file's full contents | `cat README.md` |
+| `less` | View a file page-by-page | `less app.log` (press `q` to quit) |
+| `head` | Show the first lines of a file (default: 10) | `head -n 5 file.txt` |
+| `tail` | Show the last lines of a file | `tail -n 20 server.log` |
+
+**Note:** `cp` creates a new inode with its own copy of the data. `mv` doesn't touch the data at all — it's usually just a directory-entry
+update, unless moving across filesystems (in which case it copies then deletes).
+
+---
+
+## The Permission Model
+
+Every file has **three permission types** for **three categories of user**.
+
+**Permission types (and their numeric values):**
+- `r` (read) = 4
+- `w` (write) = 2
+- `x` (execute) = 1
+
+**User categories:**
+- **owner** — the user who owns the file
+- **group** — users in the file's group
+- **other** — everyone else
+
+Example from `ls -l`:
+```
+-rwxr-xr--  1 temitayo devteam  220 Oct 1 09:00 deploy.sh
+```
+- `-` → file type (`-` = regular file, `d` = directory)
+- `rwx` → owner's permissions
+- `r-x` → group's permissions
+- `r--` → other's permissions
+
+---
+
+## chmod — Changing Permissions
+
+**Numeric (octal) mode:**
+```bash
+chmod 754 deploy.sh
+# owner: 7 = rwx (4+2+1)
+# group: 5 = r-x (4+1)
+# other: 4 = r-- (4)
+```
+
+**Symbolic mode:**
+```bash
+chmod u+x script.sh    # add execute for owner
+chmod g-w file.txt     # remove write for group
+chmod o=r file.txt     # set other's permission to exactly read
+```
+(`u` = owner, `g` = group, `o` = other, `a` = all)
+
+---
+
+## chown — Changing Ownership
+
+```bash
+chown newowner file.txt              # change owner
+chown newowner:newgroup file.txt     # change owner and group together
+```
+Usually requires `sudo` — only root or the current owner can reassign ownership.
+
+---
+
+## Why This Is Instant Regardless of File Size
+
+Permissions and ownership are stored **in the inode itself** — not in the directory, not in the file's data content. 
+That's why `chmod` and `chown` complete instantly: you're editing metadata in one place, never touching the file's actual data blocks.
+
+---
+
+## Permissions Cheat-Sheet (Deliverable)
+
+Three files, each with a different permission combination:
+
+```bash
+touch file1.txt file2.txt file3.txt
+chmod 644 file1.txt   # owner: rw-, group: r--, other: r--
+chmod 600 file2.txt   # owner: rw-, group: ---, other: ---
+chmod 755 file3.txt   # owner: rwx, group: r-x, other: r-x
+ls -l
+```
+
+| File | Permissions | Who can do what |
+|---|---|---|
+| `file1.txt` | `644` | Owner can read/write. Group and others can only read. |
+| `file2.txt` | `600` | Owner can read/write. No one else has any access. |
+| `file3.txt` | `755` | Owner can read/write/execute. Group and others can read/execute, not write. |
