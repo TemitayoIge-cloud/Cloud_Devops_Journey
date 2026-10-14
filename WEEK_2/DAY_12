@@ -1,0 +1,80 @@
+# Day 12 (Week 2): Package Management
+
+**Objective:** Install, update, and remove software using a Linux package manager.
+
+## What is a package manager?
+
+A package manager is the Linux "app store" in the terminal. It downloads software from trusted repositories, installs it along with everything it depends on, and lets you update or remove it cleanly. It is safer and faster than downloading installers from random websites.
+
+## Key idea: update vs upgrade
+
+- `apt update` refreshes the list of available packages. It installs nothing.
+- `apt upgrade` installs newer versions of packages you already have.
+
+Always run `update` first so apt knows what is current.
+
+## Practice in the VM
+
+### 1. Refresh the package list
+
+```bash
+sudo apt update
+```
+
+### 2. Install git, curl, and htop
+
+```bash
+sudo apt install git curl htop -y
+```
+
+### 3. Confirm each one works
+
+```bash
+git --version
+curl --version
+htop        # press q to quit
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+### 4. Extra practice: search, remove, clean up
+
+```bash
+apt search htop
+apt show htop
+sudo apt remove htop
+sudo apt install htop -y      # put it back
+sudo apt autoremove
+```
+
+- `remove` deletes the program but keeps its config files.
+- `purge` deletes the program and its config files.
+- `autoremove` clears dependencies nobody needs anymore.
+
+## Notes: apt vs yum/dnf
+
+| | apt | yum / dnf |
+|---|---|---|
+| Distro family | Debian, Ubuntu | RHEL, CentOS Stream, Rocky, AlmaLinux, Fedora, Amazon Linux |
+| Package format | `.deb` | `.rpm` |
+| Low-level tool | `dpkg` | `rpm` |
+| Install | `sudo apt install git` | `sudo dnf install git` |
+| Remove | `sudo apt remove git` | `sudo dnf remove git` |
+| Refresh / update | `sudo apt update` then `sudo apt upgrade` | `sudo dnf upgrade` (refreshes metadata automatically) |
+| Search | `apt search git` | `dnf search git` |
+
+**Things to remember:**
+- `dnf` is the modern replacement for `yum`. On current RHEL-family systems, `yum` is just an alias for `dnf`, but older servers (such as 
+Amazon Linux 2) still use `yum`.
+- Package names can differ between families (for example, `apache2` on Ubuntu vs `httpd` on RHEL).
+- The ideas are the same everywhere: refresh, install, verify, remove. Learn one and the other takes minutes.
+- You will meet both in cloud work: Ubuntu is common on AWS and Azure VMs, and Amazon Linux and RHEL are common in enterprise setups.
+
+## Deliverable
+
+git, curl, and htop installed and verified in the VM.
+
