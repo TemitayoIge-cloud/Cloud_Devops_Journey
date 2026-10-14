@@ -1,0 +1,111 @@
+# Day 14 (Week 2): Linux Week 2 Review and Bandit Wargame
+
+**Objective:** Consolidate Week 2 and pressure-test my skills against a real challenge.
+
+## Part 1: OverTheWire Bandit progress
+
+- Site: https://overthewire.org/wargames/bandit/
+- Connect: `ssh banditN@bandit.labs.overthewire.org -p 2220` (replace `N` with the level number)
+- Level 0 login details are on the Bandit Level 0 page.
+
+> Do NOT write passwords in this file or commit them to GitHub. Record the commands and what I learned instead.
+
+| Level | Done? | Commands I used | What I learned / what tripped me up |
+|---|---|---|---|
+| 0 → 1 | [ ] | | |
+| 1 → 2 | [ ] | | |
+| 2 → 3 | [ ] | | |
+| 3 → 4 | [ ] | | |
+| 4 → 5 | [ ] | | |
+| 5 → 6 | [ ] | | |
+| 6 → 7 | [ ] | | |
+| 7 → 8 | [ ] | | |
+| 8 → 9 | [ ] | | |
+| 9 → 10 | [ ] | | |
+
+**Minimum target:** levels 0-5. **Stretch:** levels 6-10.
+
+### Habits that help
+- Read the level goal and the "commands you may need" list before typing anything.
+- Use `man <command>` or `<command> --help` before asking for help.
+- Filenames starting with `-` or containing spaces need `./` or quotes.
+- Keep a running list of every command that worked. It feeds the cheat-sheet below.
+
+## Part 2: Week 2 review
+
+Commands I am still unsure of (re-read notes, then list them here):
+
+- 
+- 
+- 
+
+## Part 3: Linux Commands I Actually Use
+
+Fill in the "What it does" and "My example" columns in my own words. Delete any command I have not used, and add any I have.
+
+### Navigation and files
+
+| Command | What it does | My example |
+|---|---|---|
+| `pwd` | | |
+| `ls -la` | | |
+| `cd` | | |
+| `mkdir` | | |
+| `touch` | | |
+| `cp` | | |
+| `mv` | | |
+| `rm` | | |
+| `cat` | | |
+| `find` | | |
+
+### Permissions
+
+| Command | What it does | My example |
+|---|---|---|
+| `ls -l` | | |
+| `chmod` | | |
+| `chown` | | |
+
+### Users, groups and sudo
+
+| Command | What it does | My example |
+|---|---|---|
+| `adduser` | | |
+| `groupadd` | | |
+| `usermod -aG` | | |
+| `id` | | |
+| `getent group` | | |
+| `su -` | | |
+| `sudo` | | |
+| `passwd` | | |
+
+### Packages (apt vs dnf)
+
+| Command | What it does | My example |
+|---|---|---|
+| `apt update` | | |
+| `apt install` | | |
+| `apt remove` | | |
+| `dnf install` | | |
+
+### Text editing and processing
+
+| Command | What it does | My example |
+|---|---|---|
+| `nano` / `vim` | | |
+| `grep` (`-i -n -v -c -r`) | | |
+| `sort` | | |
+| `uniq` | | |
+| `diff` | | |
+
+### Commands I picked up from Bandit
+
+| Command | What it does | My example |
+|---|---|---|
+| | | |
+| | | |
+
+## Deliverable
+
+Bandit levels 0-5 (minimum) completed and a personal Linux cheat-sheet written.
+
