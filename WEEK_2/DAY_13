@@ -1,0 +1,113 @@
+# Day 13 (Week 2): Text Editors and Text Processing
+
+**Objective:** Edit files directly on a remote server using vim or nano, and process text with grep.
+
+## Why this matters
+
+On a cloud server there is no GUI. You edit config files and dig through logs in the terminal, so these skills are used daily in DevOps.
+
+## Setup
+
+Copy `app.conf` and `app.log` (provided alongside this README) into your VM's working folder.
+
+## Part 1: Edit a config file entirely in the terminal
+
+Make a backup first so you can compare afterwards:
+
+```bash
+cp app.conf app.conf.bak
+nano app.conf        # or: vim app.conf
+```
+
+Make these changes:
+1. Change `port=8080` to `port=9090`
+2. Change `debug=true` to `debug=false`
+3. Change `log_level=INFO` to `log_level=WARN`
+4. Add a new line: `timeout=30`
+
+**Editor cheat-sheet**
+
+| Action | nano | vim |
+|---|---|---|
+| Start typing | just type | press `i` |
+| Save | `Ctrl+O`, Enter | `Esc`, then `:w` |
+| Exit | `Ctrl+X` | `:q` |
+| Save and exit | `Ctrl+O`, Enter, `Ctrl+X` | `:wq` |
+| Quit without saving | `Ctrl+X`, then `N` | `:q!` |
+
+Verify your edit:
+
+```bash
+cat app.conf
+diff app.conf.bak app.conf
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Part 2: Three grep searches on `app.log`
+
+### Search 1: show ERROR lines with line numbers
+
+```bash
+grep -n "ERROR" app.log
+```
+
+Expected: 4 lines (lines 5, 8, 11, 15).
+
+### Search 2: count "failed", ignoring case
+
+```bash
+grep -ic "failed" app.log
+```
+
+Expected: 4. `-i` ignores case, so it matches both "Failed" and "failed". `-c` prints a count instead of the lines.
+
+### Search 3: show everything that is NOT an INFO line
+
+```bash
+grep -v "INFO" app.log
+```
+
+Expected: 7 lines (every WARN and ERROR entry). `-v` inverts the match.
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+### Bonus drills
+
+```bash
+grep -c "WARN" app.log                 # count of warnings (expected: 3)
+grep -A 1 "ERROR" app.log              # each error plus the line after it
+grep "ERROR" app.log | sort | uniq     # combine grep with sort and uniq
+grep -r "ERROR" .                      # search every file in the current folder
+```
+
+## grep flags I learned
+
+| Flag | Meaning |
+|---|---|
+| `-i` | ignore case |
+| `-n` | show line numbers |
+| `-v` | invert (lines that do NOT match) |
+| `-c` | count matching lines |
+| `-r` | search recursively through folders |
+| `-A N` | show N lines after each match |
+
+## Other tools from the freeCodeCamp section
+
+- `sort`: orders lines alphabetically or numerically
+- `uniq`: removes adjacent duplicates (run `sort` first)
+- `find`: locates files, e.g. `find . -name "*.conf"`
+- `diff`: compares two files line by line
+
+## Deliverable
+
+A config file edited entirely in the terminal, plus three documented grep searches.
+
