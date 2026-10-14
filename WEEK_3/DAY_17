@@ -1,0 +1,154 @@
+# Day 17 (Week 3): Processes, Job Control and systemd Services
+
+**Objective:** Manage running processes and understand how Linux services start, stop, and restart.
+
+## Part 1: Processes and job control (morning)
+
+| Command | What it does |
+|---|---|
+| `ps aux` | list all running processes |
+| `ps aux \| grep <name>` | find a specific process and its PID |
+| `top` / `htop` | live process view (`q` to quit) |
+| `kill <PID>` | ask a process to stop politely (SIGTERM) |
+| `kill -9 <PID>` | force-kill a process (SIGKILL) |
+| `killall <name>` | kill every process with that name |
+| `sleep 300 &` | run a command in the background |
+| `jobs` | list background jobs in this terminal |
+| `Ctrl+Z` | pause the current foreground job |
+| `bg` / `fg` | resume a job in the background / bring it to the foreground |
+
+### Quick practice
+
+```bash
+sleep 300 &
+jobs
+ps aux | grep sleep
+kill %1            # %1 is the job number shown by `jobs`
+jobs
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Part 2: What is a systemd service?
+
+A service is a program managed by systemd. It can start at boot, restart automatically if it crashes, and send its output to the system journal.
+
+| Command | What it does |
+|---|---|
+| `sudo systemctl start <name>` | start now |
+| `sudo systemctl stop <name>` | stop now |
+| `sudo systemctl restart <name>` | stop, then start |
+| `sudo systemctl enable <name>` | start automatically at boot |
+| `sudo systemctl disable <name>` | do not start at boot |
+| `systemctl status <name>` | current state plus recent log lines |
+| `journalctl -u <name>` | full logs for the service |
+| `sudo systemctl daemon-reload` | tell systemd to re-read unit files (run after every edit) |
+
+Unit files live in `/etc/systemd/system/`. Sections:
+- `[Unit]`: description and ordering
+- `[Service]`: what to run and how
+- `[Install]`: when to start it (`WantedBy=multi-user.target` means normal boot)
+
+## Part 3 (afternoon): service for `backup.sh`
+
+A skeleton is provided in `systemd/backup.service`. Fill in the TODOs, then install it:
+
+```bash
+sudo cp systemd/backup.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start backup.service
+systemctl status backup.service
+journalctl -u backup.service
+sudo systemctl enable backup.service
+```
+
+Notes:
+- `backup.sh` runs and exits, so `status` will show it as finished (`inactive (dead)`). With `Type=oneshot` that is normal.
+- Check that a new `backup_<timestamp>` folder appeared in your backup location.
+- If it fails, `journalctl -u backup.service` tells you why. The usual causes are relative paths, a missing `chmod +x`, or wrong permissions.
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Part 4 (evening): kill and restart drill
+
+`backup.sh` exits on its own, so use `heartbeat.sh`, a long-running script that writes a timestamp every 5 seconds. Skeleton service: `systemd/heartbeat.service`.
+
+```bash
+chmod +x scripts/heartbeat.sh
+sudo cp systemd/heartbeat.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start heartbeat.service
+systemctl status heartbeat.service          # note the Main PID
+tail -f /tmp/heartbeat.log                  # Ctrl+C to stop watching
+```
+
+Now the drill:
+
+```bash
+sudo kill -9 <Main PID>                     # simulate a crash
+systemctl status heartbeat.service          # a NEW PID means systemd restarted it
+sudo systemctl stop heartbeat.service       # a deliberate stop is NOT restarted
+systemctl status heartbeat.service
+sudo systemctl start heartbeat.service
+sudo systemctl restart heartbeat.service
+systemctl status heartbeat.service          # compare the PID again
+```
+
+**Record at each step:**
+
+| Step | Command | Status | PID |
+|---|---|---|---|
+| Started | `start` | | |
+| Killed | `kill -9` | | |
+| Auto-restarted? | `status` | | |
+| Stopped | `stop` | | |
+| Restarted | `restart` | | |
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Troubleshooting
+
+- `Failed to connect to bus` or `System has not been booted with systemd`: your environment is not using systemd (some containers and WSL setups). Use a full Ubuntu VM.
+- `Permission denied` on `ExecStart`: run `chmod +x` on the script and check the path.
+- Changes not taking effect: you forgot `sudo systemctl daemon-reload`.
+- Service exits immediately: check `journalctl -u <name> -n 20`.
+
+## Checklist
+
+- [ ] Background job practice done (`&`, `jobs`, `Ctrl+Z`, `bg`, `fg`, `kill`)
+- [ ] `backup.service` filled in, installed, and started successfully
+- [ ] Backup folder was created by the service
+- [ ] `heartbeat.service` killed and auto-restarted with a new PID
+- [ ] Recorded status after each step
+- [ ] Unit files saved in the repo's `systemd/` folder
+
+## What I learned
+
+(Write 3 to 4 sentences in my own words: the difference between `kill` and `stop`, 
+what `Restart=always` does, and why services should run as a normal user.)
+
+## Commit to GitHub
+
+```bash
+git add systemd/ scripts/heartbeat.sh day17-README.md
+git commit -m "Day 17: process management and systemd service"
+git push
+```
+
+## Deliverable
+
+A custom systemd unit file controlling my backup script, committed to the repo.
+
+**Commit message:** `Day 17: process management and systemd service`
