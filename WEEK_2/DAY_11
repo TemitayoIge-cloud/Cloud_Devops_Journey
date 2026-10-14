@@ -1,0 +1,73 @@
+ Day 11 (Week 2): Users, Groups and Sudo
+
+**Objective:** Understand multi-user Linux administration: creating users, managing groups, and using sudo safely.
+
+## Key concepts
+
+- **User:** an identity on the system with a name, home folder, and password.
+- **Group:** a label attached to users so permissions can be given to many people at once.
+- **sudo:** lets a normal user run a single command as root. It is temporary and logged.
+
+## Practice in the VM
+
+### 1. Create two users and one group
+
+```bash
+sudo adduser alice
+sudo adduser bob
+sudo groupadd devteam
+```
+
+### 2. Add both users to the group
+
+```bash
+sudo usermod -aG devteam alice
+sudo usermod -aG devteam bob
+```
+
+> `-a` means append. Without it, `usermod -G` replaces all existing groups and can remove a user's sudo access.
+
+### 3. Verify
+
+```bash
+getent group devteam
+id alice
+id bob
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+### 4. Practice sudo safely
+
+```bash
+su - alice
+sudo whoami          # should fail: alice is not in the sudo group
+exit
+sudo usermod -aG sudo alice
+su - alice
+sudo whoami          # should now print: root
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Notes: Principle of least privilege
+
+Every user, program, and service should get only the minimum access it needs to do its job, and nothing more.
+
+### Why production servers should not run as root
+
+1. **Limits damage from attacks.** A compromised root process means a compromised server. A limited user is stuck in a small box.
+2. **Limits damage from mistakes.** A typo like `rm -rf /` as root can wipe the system.
+3. **Accountability.** Separate accounts and sudo leave an audit trail of who did what and when.
+4. **Safer defaults.** Needing sudo forces a pause before risky actions.
+5. **Compliance.** Standards like SOC 2 and HIPAA expect access control and audit logs, which matters when protecting patient data.
+
+**Takeaway:** use normal accounts day to day, and use sudo only for the specific commands that need it.
