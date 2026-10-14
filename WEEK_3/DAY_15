@@ -1,0 +1,113 @@
+# Day 15 (Week 3): Bash Scripting Fundamentals: Variables and Conditionals
+
+**Objective:** Write my first real Bash scripts using variables, arguments, and if/else logic.
+
+## Key concepts
+
+| Concept | Example | Notes |
+|---|---|---|
+| Shebang | `#!/bin/bash` | First line. Tells Linux which interpreter runs the file. |
+| Variable | `name="Temi"` | No spaces around `=`. |
+| Using a variable | `echo "Hello $name"` | Use double quotes around variables. |
+| Argument | `./script.sh alice` | Inside the script, `$1` is `alice`. |
+| Argument count | `$#` | How many arguments were passed. |
+| Script name | `$0` | Handy for usage messages. |
+| Exit status | `$?` | `0` means success, anything else means failure. |
+| Exit with code | `exit 1` | Stops the script and signals an error. |
+| Comment | `# note` | Explains the code to humans. |
+
+**Number comparisons inside `[ ]`:** `-eq` equal, `-ne` not equal, `-gt` greater than, `-lt` less than, `-ge` greater or equal, `-le` less or equal.
+
+## Setup
+
+Starter skeletons for both scripts are in the `scripts/` folder. Each has TODO comments with hints. The logic is for me to write.
+
+```bash
+mkdir -p scripts
+cd scripts
+chmod +x check_user.sh categorize_number.sh
+```
+
+## Script 1: `check_user.sh`
+
+Accepts a username as an argument and prints whether that user exists on the system.
+
+Run it and compare with the expected results:
+
+```bash
+./check_user.sh root          # expected: user exists
+./check_user.sh alice         # expected: exists if I created alice on Day 11
+./check_user.sh nobody_here   # expected: user does not exist
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Script 2: `categorize_number.sh`
+
+Uses if/elif/else to print whether a number is positive, negative, or zero.
+
+```bash
+./categorize_number.sh 5      # expected: positive
+./categorize_number.sh -3     # expected: negative
+./categorize_number.sh 0      # expected: zero
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Evening refactor checklist
+
+Apply to BOTH scripts:
+
+- [ ] A comment at the top explaining what the script does
+- [ ] Comments on the main steps
+- [ ] A check for a missing argument that prints a usage message and exits with an error code
+- [ ] Re-test: run each script with NO argument and confirm it prints the usage message
+
+Pattern for the missing-argument check (placed near the top of each script):
+
+```bash
+if [ $# -eq 0 ]; then
+  echo "Usage: $0 <argument>"
+  exit 1
+fi
+```
+
+After running a script with no argument, check the exit code with:
+
+```bash
+echo $?     # expected: 1
+```
+
+## What I learned
+
+(Write 3 to 4 sentences in my own words: what `$1` is, how `if` decides which branch to run, and why checking for missing arguments matters.)
+
+## Common mistakes to watch for
+
+- Spaces around `=` in a variable assignment (`name = "x"` breaks; use `name="x"`)
+- Missing spaces inside `[ ]` (`["$num" -gt 0]` breaks; use `[ "$num" -gt 0 ]`)
+- Forgetting `then` or `fi`
+- Forgetting `chmod +x`, which causes "Permission denied"
+- Using `>` instead of `-gt` for number comparisons inside `[ ]`
+
+## Commit to GitHub
+
+```bash
+git add scripts/ day15-README.md
+git commit -m "Day 15: bash scripting - variables and conditionals"
+git push
+```
+
+## Deliverable
+
+Two working Bash scripts in a new `scripts/` folder in the repo.
+
+
