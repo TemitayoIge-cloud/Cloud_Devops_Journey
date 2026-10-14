@@ -1,0 +1,147 @@
+# Day 16 (Week 3): Bash Scripting: Loops and Functions
+
+**Objective:** Use for/while loops and functions to write reusable automation scripts.
+
+## Key concepts
+
+### for loop: do something for each item
+
+```bash
+for file in "$dir"/*; do
+  echo "$file"
+done
+```
+
+### while loop: repeat while a condition is true
+
+```bash
+count=1
+while [ $count -le 5 ]; do
+  echo $count
+  count=$((count + 1))
+done
+```
+
+### Function: write once, call many times
+
+```bash
+greet() {
+  local name="$1"
+  echo "Hello $name"
+}
+greet "Temi"
+```
+
+- Inside a function, `$1` is the function's first argument, not the script's.
+- `local` keeps a variable from leaking outside the function.
+- Define a function BEFORE the line that calls it.
+
+### Handy commands for today
+
+| Command | Use |
+|---|---|
+| `stat -c "%s %A" "$file"` | size in bytes and permission bits |
+| `date +%Y-%m-%d_%H-%M-%S` | timestamp for folder names |
+| `timestamp=$(date ...)` | store a command's output in a variable |
+| `mkdir -p` | create a folder without erroring if it exists |
+| `cp -r` | copy a directory recursively |
+| `[ -d "$path" ]` | true if the path is a directory |
+| `${2:-default}` | use argument 2, or "default" if it is missing |
+
+## Setup
+
+Starter skeletons are in the `scripts/` folder, with TODO hints:
+
+```bash
+cd scripts
+chmod +x file_info.sh backup.sh
+```
+
+## Part 1 (afternoon): `file_info.sh` with a loop
+
+Loop over every file in a directory and print its size and permission bits.
+
+```bash
+mkdir -p ~/testdir && touch ~/testdir/a.txt ~/testdir/b.txt
+echo "hello" > ~/testdir/a.txt
+./file_info.sh ~/testdir
+```
+
+Expected: one line per file showing its name, size in bytes, and permissions (for example `-rw-r--r--`).
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+Commit this working version first, so git history shows the before and after:
+
+```bash
+git add scripts/file_info.sh
+git commit -m "Day 16: file_info loop version"
+```
+
+## Part 2 (afternoon): refactor into a function
+
+Move the size/permission logic into a `show_info` function and call it from the loop. The output should stay exactly the same. That is what a good refactor does: change the structure, not the behavior.
+
+**My output after refactor (should match Part 1):**
+
+```
+(paste your terminal output here)
+```
+
+## Part 3 (evening): `backup.sh`
+
+Copies a target directory into a timestamped backup folder, using a function and a loop.
+
+```bash
+./backup.sh ~/testdir ~/backups
+ls ~/backups                     # expected: a folder like backup_2026-10-14_18-30-00
+ls ~/backups/backup_*            # expected: the copied files
+./backup.sh                      # expected: usage message, exit code 1
+./backup.sh /does/not/exist      # expected: an error message, exit code 1
+echo $?                          # expected: 1
+```
+
+**My output:**
+
+```
+(paste your terminal output here)
+```
+
+## Checklist
+
+- [ ] `file_info.sh` loop version works
+- [ ] `file_info.sh` refactored to use a function, with the same output
+- [ ] `backup.sh` header comment explains usage clearly
+- [ ] `backup.sh` handles a missing argument
+- [ ] `backup.sh` handles a source directory that does not exist
+- [ ] Timestamped backup folder is created and files are copied
+- [ ] All variables are quoted (`"$file"`)
+
+## Common mistakes to watch for
+
+- Unquoted variables: filenames with spaces will break the loop
+- Spaces around `=` when creating a variable
+- Calling a function before it is defined
+- Forgetting `local` inside functions
+- Using `$1` inside a function and expecting the script's argument
+- Forgetting `-r` on `cp` when copying directories
+
+## What I learned
+
+(Write 3 to 4 sentences in my own words: when to use a loop, what a function buys me, and why timestamped backups are useful.)
+
+## Commit to GitHub
+
+```bash
+git add scripts/ day16-README.md
+git commit -m "Day 16: bash scripting - loops, functions, backup script"
+git push
+```
+
+## Deliverable
+
+A working `backup.sh` script committed with a clear header comment explaining usage.
